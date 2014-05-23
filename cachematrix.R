@@ -10,6 +10,8 @@
 makeCacheMatrix <- function(x = matrix()) {
     inverse <- NULL
     set <- function(newMatrix){
+        ## set the values of the actual matrix and reset the cache
+        ## we do this in the parent environment
         x <<- newMatrix
         inverse <<- NULL
     }
@@ -35,13 +37,17 @@ makeCacheMatrix <- function(x = matrix()) {
 ## from the cache.
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
+        ## first, look in the cache:
         inv <- x$getInverse()
         if(!is.null(inv)){
+            ## we got lucky: 
             message("getting cached data")
             return(inv)
         }
+        ## otherwise, we have to calculate it:
         myMatrix <- x$get()
         inv <- solve(myMatrix, ...)
+        ## and put it in the cache for next time:
         x$setInverse(inv)
         inv
 }
